@@ -1,0 +1,42 @@
+name: create comment
+
+on:
+  pull_request:
+    types: [opened]
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch ${{ github.head_ref }}
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup Node.js 
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Add comment for submit
+        uses: actions/github-script@v6
+        if: always()
+        with:
+          script: |
+            const name = `${{ github.triggering_actor	}}`;
+            let lab = `${{github.head_ref}}`;
+            lab = lab.split('/', 3);
+            lab = lab[1];
+            lab = lab.slice(4);
+            const url = `${{ github.event.pull_request.html_url }}`;
+
+            const body = `# Отправка работы
+
+            Для отправки лабораторной работы на проверку необходимо перейти по <a href='https://script.google.com/macros/s/AKfycbxGtfp3Mk7yPtsgzRoHtDGQImFBWDxQYYzgQ1PcCv9p/dev?nickname=${name}&lab=${lab}&link=${url}'>ссылке</a>.`;
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            })

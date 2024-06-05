@@ -1,0 +1,19 @@
+name: Branchlint
+
+on:
+  pull_request:
+    branches:
+      - "main"
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lint branch name
+        uses: lekterable/branchlint-action@2.1.0
+        with:
+          allowed: |
+            develop
+            main
+            dev
+            /(feature|fix|hotfix)/lab-\d+/.+/
+          errorMessage: "Invalid branch name"

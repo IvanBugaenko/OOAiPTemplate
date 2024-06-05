@@ -1,0 +1,16 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 100%
+        threshold: 0%
+
+comment:
+  layout: "condensed_header, diff, flags"
+
+component_management:
+  individual_components:
+    - component_id: api
+      name: api
+      paths:
+        - api
